@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = Knipper::VERSION
   gem.authors       = ["Erwin Boskma"]
   gem.email         = ["erwin@datarift.nl"]
-  gem.description   = %q{Ruby wrapper for the blink(1) library}
+  gem.description   = %q{Ruby wrapper for the blink(1) C-library}
   gem.summary       = %q{Wraps the C-library that is available for the blink(1) USB status lights}
   gem.homepage      = "http://github.com/eboskma/knipper"
   
@@ -17,5 +17,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency "ffi", ['>= 1.2.0']
+  gem.add_runtime_dependency "ffi", ['~> 1.2.0']
+  
+  gem.add_development_dependency "rspec", ['~> 2.12.0']
+  gem.add_development_dependency "knipper", ['>= 0.0.1.dev3']
 end
