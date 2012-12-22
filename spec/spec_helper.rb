@@ -5,6 +5,11 @@ class BlinkFormatter < RSpec::Core::Formatters::BaseFormatter
     super(output)
   end
   
+  def start(count)
+    super(count)
+    Knipper::Device.new { |d| d.fade_to_rgb 100, 0, 0, 0 }
+  end
+  
   def stop
     if @failed_examples.length > 0
       Knipper::Device.new { |d| d.fade_to_rgb 500, 255, 0, 0 }

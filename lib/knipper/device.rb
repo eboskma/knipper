@@ -43,5 +43,17 @@ module Knipper
     def set_rgb(red, green, blue)
       @@lib.blink1_setRGB(@device, red, green, blue)
     end
+    
+    def write_pattern_line(millis, red, green, blue, pos)
+      @@lib.blink1_writePatternLine(@device, millis, red, green, blue, pos)
+    end
+    
+    def start_pattern(pos)
+      @@lib.blink1_play(@device, 1, pos)
+    end
+    
+    def stop_pattern
+      @@lib.blink1_play(@device, 0, 0)
+    end
   end
 end
