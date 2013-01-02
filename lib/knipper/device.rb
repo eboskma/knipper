@@ -8,7 +8,6 @@ module Knipper
       
       num_devices = @@lib.blink1_enumerate
       devices = []
-      puts "#{num_devices} blink(1) devices found"
       num_devices.times do |i|
         devices << @@lib.blink1_getCachedPath(i)
       end unless num_devices < 1
@@ -16,8 +15,8 @@ module Knipper
       devices
     end
     
-    def self.finalize
-      proc { @@lib.blink1_close @device }
+    def self.device_present?
+      devices.length > 0
     end
     
     def initialize(path = nil, &block)
@@ -32,8 +31,10 @@ module Knipper
         @@lib.blink1_close @device
         return
       end
-      
-      ObjectSpace.define_finalizer(self, self.class.finalize())
+    end
+    
+    def close
+      @@lib.blink1_close @device
     end
     
     def fade_to_rgb(millis, red, green, blue)
@@ -46,6 +47,41 @@ module Knipper
     
     def write_pattern_line(millis, red, green, blue, pos)
       @@lib.blink1_writePatternLine(@device, millis, red, green, blue, pos)
+    end
+    
+    def read_pattern_line(pos)
+      millis = FFI::MemoryPointer.new(:ushort)
+      r = FFI::MemoryPointer.new(:uchar)
+      g = FFI::MemoryPointer.new(:uchar)
+      b = FFI::MemoryPointer.new(:uchar)
+      @@lib.blink1_readPatternLine(@device, millis, r, g, b, pos)
+      
+      Knipper::Pattern::PatternLine.new({
+        millis: millis.read_uint16, 
+        red: r.read_uint8,
+        green: g.read_uint8,
+        blue: b.read_uint8
+      })
+    end
+    
+    def clear_pattern
+      12.times do |i|
+        write_pattern_line 0, 0, 0, 0, i
+      end
+    end
+    
+    def write_pattern(pattern, clear=true)
+      if pattern.is_a? String
+        pattern = Knipper::Pattern::Pattern.parse(pattern)
+      end
+      
+      if pattern.is_a? Knipper::Pattern::Pattern
+        clear_pattern if clear
+        
+        pattern.pattern.each do |pattern_line|
+          write_pattern_line pattern_line.millis, pattern_line.red, pattern_line.green, pattern_line.blue, pattern.pattern.index(pattern_line)
+        end
+      end
     end
     
     def start_pattern(pos)

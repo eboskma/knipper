@@ -19,8 +19,11 @@ module Knipper
     attach_function :blink1_close, [:pointer], :void
     attach_function :blink1_play, [:pointer, :uchar, :uchar], :int
     attach_function :blink1_writePatternLine, [:pointer, :ushort, :uchar, :uchar, :uchar, :uchar], :int
+    attach_function :blink1_readPatternLine, [:pointer, :pointer, :pointer, :pointer, :pointer, :uchar], :int
+    attach_function :blink1_degamma, [:int], :int
     
     attach_function :blink1_setRGB, [:pointer, :uchar, :uchar, :uchar], :int
     attach_function :blink1_fadeToRGB, [:pointer, :ushort, :uchar, :uchar, :uchar], :int
+    
   end
 end

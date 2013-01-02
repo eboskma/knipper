@@ -1,3 +1,4 @@
-require "knipper/version"
+require 'knipper/version'
 require 'knipper/blink1_lib'
 require 'knipper/device'
+require 'knipper/pattern'
