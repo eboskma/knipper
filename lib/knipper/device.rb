@@ -78,7 +78,7 @@ module Knipper
       if pattern.is_a? Knipper::Pattern::Pattern
         clear_pattern if clear
         
-        pattern.pattern.each do |pattern_line|
+        pattern.lines.each do |pattern_line|
           write_pattern_line pattern_line.millis, pattern_line.red, pattern_line.green, pattern_line.blue, pattern.pattern.index(pattern_line)
         end
       end
